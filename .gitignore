@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/quaver-autoplay/.vs
+/quaver-autoplay/out/build
+/.vs
