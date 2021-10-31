@@ -13,6 +13,29 @@ namespace sdk {
       return loaded;
     }
 
+    qua_t current_map() {
+      unsigned long long address = *(unsigned long long *)(get_base() + 0x58);
+
+      qua_t map;
+      map.game_mode = *(int *)(address + 0xA4);
+      map.title = string(address + 0x20).str();
+      map.artist = string(address + 0x28).str();
+      map.creator = string(address + 0x40).str();
+      map.difficulty = string(address + 0x48).str();
+
+      list hit_object_list(address + 0x88);
+
+      for (int i = 0; i < hit_object_list.size(); i++) {
+        map.hit_object_data.push_back({
+            *(int *)(hit_object_list[i] + 0x10),
+            *(int *)(hit_object_list[i] + 0x18),
+            *(int *)(hit_object_list[i] + 0x14),
+        });
+      }
+
+      return map;
+    }
+
     gameplay_screen(unsigned long long offset) : object(offset) { set_childs({gameplay_audio_timing = new sdk::gameplay_audio_timing(0x48)}); }
   };
 } // namespace sdk

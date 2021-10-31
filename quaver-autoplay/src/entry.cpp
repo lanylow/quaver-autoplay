@@ -9,8 +9,11 @@ void autoplayer_thread() {
 
   while (true) {
     if (quaver_game.gameplay_screen->is_loaded()) {
-      printf("time: %d\n", (int)quaver_game.gameplay_screen->gameplay_audio_timing->time());
-      std::this_thread::yield();
+      sdk::qua_t map = quaver_game.gameplay_screen->current_map();
+      printf("%s - %s [%s] by %s\n", map.artist.c_str(), map.title.c_str(), map.difficulty.c_str(), map.creator.c_str());
+      for (auto &object : map.hit_object_data)
+        printf("start_time: %d, end_time: %d, key_lane: %d\n", object.start_time, object.end_time, object.key_lane);
+      break;
     }
   }
 }
