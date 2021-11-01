@@ -11,6 +11,7 @@
 #include "sdk/list.hpp"
 #include "sdk/string.hpp"
 #include "sdk/game_mode.hpp"
+#include "sdk/quaver_key.hpp"
 #include "sdk/hit_object_data.hpp"
 #include "sdk/qua.hpp"
 #include "sdk/quaver_screen_type.hpp"

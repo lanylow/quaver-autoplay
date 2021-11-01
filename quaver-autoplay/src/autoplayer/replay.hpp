@@ -47,6 +47,7 @@ namespace autoplayer {
   };
 
   struct replay {
+    int game_mode;
     std::vector<replay_frame> frames;
   };
 } // namespace autoplayer
