@@ -13,10 +13,10 @@ namespace sdk {
       return loaded;
     }
 
-    qua_t current_map() {
+    auto current_map() {
       unsigned long long address = *(unsigned long long *)(get_base() + 0x58);
 
-      qua_t map;
+      qua map;
       map.game_mode = *(int *)(address + 0xA4);
       map.title = string(address + 0x20).str();
       map.artist = string(address + 0x28).str();

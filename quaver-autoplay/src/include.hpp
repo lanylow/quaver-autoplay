@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <codecvt>
+#include <algorithm>
+#include <map>
 
 #include "sdk/object.hpp"
 #include "sdk/list.hpp"
@@ -15,5 +17,8 @@
 #include "sdk/gameplay_audio_timing.hpp"
 #include "sdk/gameplay_screen.hpp"
 #include "sdk/quaver_game.hpp"
+
+#include "autoplayer/replay.hpp"
+#include "autoplayer/autoplayer.hpp"
 
 #include "memory.hpp"

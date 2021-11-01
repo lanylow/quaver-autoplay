@@ -1,7 +1,7 @@
 #pragma once
 
 namespace sdk {
-  struct qua_t {
+  struct qua {
     int game_mode;
     std::string title;
     std::string artist;

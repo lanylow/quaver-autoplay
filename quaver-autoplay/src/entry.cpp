@@ -9,10 +9,10 @@ void autoplayer_thread() {
 
   while (true) {
     if (quaver_game.gameplay_screen->is_loaded()) {
-      sdk::qua_t map = quaver_game.gameplay_screen->current_map();
-      printf("%s - %s [%s] by %s\n", map.artist.c_str(), map.title.c_str(), map.difficulty.c_str(), map.creator.c_str());
-      for (auto &object : map.hit_object_data)
-        printf("start_time: %d, end_time: %d, key_lane: %d\n", object.start_time, object.end_time, object.key_lane);
+      sdk::qua map = quaver_game.gameplay_screen->current_map();
+      autoplayer::replay rep = autoplayer::generate_auto_replay(map);
+      for (auto &frame : rep.frames)
+        printf("time: %d, keys: %d\n", frame.time, frame.keys);
       break;
     }
   }
