@@ -6,6 +6,7 @@
 #include <codecvt>
 #include <algorithm>
 #include <map>
+#include <random>
 
 #include "sdk/object.hpp"
 #include "sdk/list.hpp"

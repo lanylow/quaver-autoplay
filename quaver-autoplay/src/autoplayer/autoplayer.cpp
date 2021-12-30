@@ -3,15 +3,20 @@
 autoplayer::replay autoplayer::generate_auto_replay(sdk::qua &map) {
   std::vector<replay_autoplay_frame> non_combined;
 
-  for (auto &object : map.hit_object_data) {
-    non_combined.push_back({object.start_time, replay_autoplay_frame_type::press, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
+  std::random_device device;
+  std::mt19937 rng(device());
+  std::uniform_int_distribution<std::mt19937::result_type> start_dist(-40, 40); // click offset
+  std::uniform_int_distribution<std::mt19937::result_type> note_dist(20, 30); // note release offset
+  std::uniform_int_distribution<std::mt19937::result_type> slider_dist(-10, 10); // slider release offset
 
-    if (object.is_long_note())
-      non_combined.push_back(
-          {object.end_time - 1, replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
+  for (auto &object : map.hit_object_data) {
+    int start = start_dist(rng);
+    non_combined.push_back({(int)(object.start_time + start), replay_autoplay_frame_type::press, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
+
+    if (object.is_long_note() && object.end_time > object.start_time + start)
+      non_combined.push_back({(int)(object.end_time + slider_dist(rng)), replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
     else
-      non_combined.push_back(
-          {object.start_time + 30, replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
+      non_combined.push_back({(int)(object.start_time + start + note_dist(rng)), replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
   }
 
   std::sort(non_combined.begin(), non_combined.end(), [](replay_autoplay_frame lhs, replay_autoplay_frame rhs) { return lhs.time < rhs.time; });
