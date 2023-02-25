@@ -15,6 +15,9 @@ namespace sdk {
 
     auto current_map() {
       unsigned long long address = *(unsigned long long *)(get_base() + 0x58);
+      /*unsigned long long slider_velocities = *(unsigned long long *)(address + 0x80);
+      *(unsigned long long *)(slider_velocities + 0x10) = 0;
+      *(float *)(address + 0xA8) = 32.f;*/
 
       qua map;
       map.game_mode = *(int *)(address + 0xA4);
