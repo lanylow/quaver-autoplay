@@ -1,7 +1,7 @@
-#include "../include.hpp"
+#include <include.hpp>
 
 autoplayer::replay autoplayer::generate_auto_replay(sdk::qua& map) {
-  std::vector<replay_autoplay_frame> non_combined;
+  std::vector<autoplayer::replay_autoplay_frame> non_combined;
 
   for (auto& object : map.hit_object_data) {
     non_combined.push_back({ (int)(object.start_time), replay_autoplay_frame_type::press, replay_key_press_state::key_lane_to_press_state(object.key_lane), object });
@@ -12,13 +12,15 @@ autoplayer::replay autoplayer::generate_auto_replay(sdk::qua& map) {
       non_combined.push_back({ (int)(object.start_time + 30), replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object });
   }
 
-  std::sort(non_combined.begin(), non_combined.end(), [](replay_autoplay_frame lhs, replay_autoplay_frame rhs) { return lhs.time < rhs.time; });
+  std::sort(non_combined.begin(), non_combined.end(), [](autoplayer::replay_autoplay_frame lhs, autoplayer::replay_autoplay_frame rhs) {
+    return lhs.time < rhs.time; 
+  });
 
-  replay rep;
+  autoplayer::replay rep;
   rep.game_mode = map.game_mode;
   rep.frames.push_back({ -10000, 0 });
 
-  std::map<int, std::vector<replay_autoplay_frame>> start_time_group;
+  std::map<int, std::vector<autoplayer::replay_autoplay_frame>> start_time_group;
   for (auto& frame : non_combined)
     start_time_group[frame.time].push_back(frame);
 
@@ -40,9 +42,9 @@ autoplayer::replay autoplayer::generate_auto_replay(sdk::qua& map) {
   return rep;
 }
 
-void autoplayer::run(sdk::quaver_game& quaver_game, replay& rep) {
+void autoplayer::run(sdk::quaver_game& quaver_game, autoplayer::replay& rep) {
   auto last_time = quaver_game.gameplay_screen->gameplay_audio_timing->time();
-  int key_count = rep.game_mode == sdk::game_mode::keys4 ? 4 : 7;
+  auto key_count = rep.game_mode == sdk::game_mode::keys4 ? 4 : 7;
 
   std::vector<int> replay_keys;
   for (auto i = 0; i < key_count; i++)
@@ -51,7 +53,7 @@ void autoplayer::run(sdk::quaver_game& quaver_game, replay& rep) {
   int index = get_nearest_frame(rep, quaver_game.gameplay_screen->gameplay_audio_timing->time());
   while (quaver_game.gameplay_screen->is_loaded() && index < rep.frames.size()) {
     auto current_time = quaver_game.gameplay_screen->gameplay_audio_timing->time();
-    if (abs(current_time - last_time) >= 50)
+    if (std::abs(current_time - last_time) >= 50)
       break;
 
     last_time = current_time;
@@ -75,7 +77,7 @@ void autoplayer::run(sdk::quaver_game& quaver_game, replay& rep) {
     simulate_key(get_key_by_lane_index(key_count, i), KEYEVENTF_KEYUP);
 }
 
-int autoplayer::get_nearest_frame(replay& rep, double time) {
+int autoplayer::get_nearest_frame(autoplayer::replay& rep, double time) {
   for (int i = (int)rep.frames.size() - 1; i >= 0; i--)
     if (rep.frames[i].time <= time)
       return i;

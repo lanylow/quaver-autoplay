@@ -9,11 +9,17 @@ namespace sdk {
       buf = (const wchar_t*)(address + 0xC);
     }
 
-    int size() { return len; }
+    int size() { 
+      return len; 
+    }
 
-    std::wstring wstr() { return std::wstring(buf, len); }
+    std::wstring wstr() { 
+      return std::wstring(buf, len); 
+    }
 
-    std::string str() { return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wstr()); }
+    std::string str() { 
+      return std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t>{}.to_bytes(wstr()); 
+    }
 
   private:
     int len;

@@ -7,6 +7,6 @@ namespace sdk {
     std::string artist;
     std::string creator;
     std::string difficulty;
-    std::vector<hit_object_data_t> hit_object_data;
+    std::vector<sdk::hit_object_data_t> hit_object_data;
   };
 } // namespace sdk
