@@ -9,9 +9,9 @@ void autoplayer_thread() {
   while (true) {
     if (quaver_game.gameplay_screen->is_loaded()) {
       sdk::qua map = quaver_game.gameplay_screen->current_map();
-      printf("Playing %s - %s [%s] by %s\n", map.artist.c_str(), map.title.c_str(), map.difficulty.c_str(), map.creator.c_str());
+      std::printf("Playing %s - %s [%s] by %s\n", map.artist.c_str(), map.title.c_str(), map.difficulty.c_str(), map.creator.c_str());
 
-      autoplayer::replay rep = autoplayer::generate_auto_replay(map);   
+      autoplayer::replay rep = autoplayer::generate_auto_replay(map);
       while (quaver_game.gameplay_screen->is_loaded())
         autoplayer::run(quaver_game, rep);
     }
@@ -22,7 +22,7 @@ void autoplayer_thread() {
   }
 }
 
-bool __stdcall DllMain(void *instance, int reason, void *reserved) {
+bool __stdcall DllMain(void* instance, int reason, void* reserved) {
   if (reason == DLL_PROCESS_ATTACH)
     std::thread(autoplayer_thread).detach();
   return true;

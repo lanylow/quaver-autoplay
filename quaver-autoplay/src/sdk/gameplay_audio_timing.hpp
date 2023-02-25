@@ -5,6 +5,6 @@ namespace sdk {
   public:
     gameplay_audio_timing(unsigned long long offset) : object(offset) {}
 
-    double time() { return *(double *)(get_base() + 0x10); }
+    double time() { return *(double*)(get_base() + 0x10); }
   };
 } // namespace sdk

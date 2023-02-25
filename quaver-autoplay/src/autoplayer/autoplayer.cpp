@@ -1,30 +1,30 @@
 #include "../include.hpp"
 
-autoplayer::replay autoplayer::generate_auto_replay(sdk::qua &map) {
+autoplayer::replay autoplayer::generate_auto_replay(sdk::qua& map) {
   std::vector<replay_autoplay_frame> non_combined;
 
-  for (auto &object : map.hit_object_data) {
-    non_combined.push_back({(int)(object.start_time), replay_autoplay_frame_type::press, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
+  for (auto& object : map.hit_object_data) {
+    non_combined.push_back({ (int)(object.start_time), replay_autoplay_frame_type::press, replay_key_press_state::key_lane_to_press_state(object.key_lane), object });
 
     if (object.is_long_note())
-      non_combined.push_back({(int)(object.end_time - 1), replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
+      non_combined.push_back({ (int)(object.end_time - 1), replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object });
     else
-      non_combined.push_back({(int)(object.start_time + 30), replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object});
+      non_combined.push_back({ (int)(object.start_time + 30), replay_autoplay_frame_type::release, replay_key_press_state::key_lane_to_press_state(object.key_lane), object });
   }
 
   std::sort(non_combined.begin(), non_combined.end(), [](replay_autoplay_frame lhs, replay_autoplay_frame rhs) { return lhs.time < rhs.time; });
 
   replay rep;
   rep.game_mode = map.game_mode;
-  rep.frames.push_back({-10000, 0});
+  rep.frames.push_back({ -10000, 0 });
 
   std::map<int, std::vector<replay_autoplay_frame>> start_time_group;
-  for (auto &frame : non_combined)
+  for (auto& frame : non_combined)
     start_time_group[frame.time].push_back(frame);
 
   int state = 0;
-  for (auto &item : start_time_group) {
-    for (auto &frame : item.second) {
+  for (auto& item : start_time_group) {
+    for (auto& frame : item.second) {
       switch (frame.type) {
       case replay_autoplay_frame_type::press: {
         state |= replay_key_press_state::key_lane_to_press_state(frame.object.key_lane);
@@ -34,13 +34,13 @@ autoplayer::replay autoplayer::generate_auto_replay(sdk::qua &map) {
       } break;
       }
     }
-    rep.frames.push_back({item.first, state});
+    rep.frames.push_back({ item.first, state });
   }
 
   return rep;
 }
 
-void autoplayer::run(sdk::quaver_game &quaver_game, replay &rep) {
+void autoplayer::run(sdk::quaver_game& quaver_game, replay& rep) {
   auto last_time = quaver_game.gameplay_screen->gameplay_audio_timing->time();
   int key_count = rep.game_mode == sdk::game_mode::keys4 ? 4 : 7;
 
@@ -57,7 +57,7 @@ void autoplayer::run(sdk::quaver_game &quaver_game, replay &rep) {
     last_time = current_time;
     if (current_time >= rep.frames[index].time) {
       auto key_state = replay_key_press_state::key_press_state_to_lanes(rep.frames[index].keys);
-      for (auto &i : replay_keys) {
+      for (auto& i : replay_keys) {
         int key = get_key_by_lane_index(key_count, i);
         if (std::count(key_state.begin(), key_state.end(), i))
           simulate_key(key, 0);
@@ -75,7 +75,7 @@ void autoplayer::run(sdk::quaver_game &quaver_game, replay &rep) {
     simulate_key(get_key_by_lane_index(key_count, i), KEYEVENTF_KEYUP);
 }
 
-int autoplayer::get_nearest_frame(replay &rep, double time) {
+int autoplayer::get_nearest_frame(replay& rep, double time) {
   for (int i = (int)rep.frames.size() - 1; i >= 0; i--)
     if (rep.frames[i].time <= time)
       return i;

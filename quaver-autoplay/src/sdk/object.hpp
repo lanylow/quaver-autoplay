@@ -7,11 +7,11 @@ namespace sdk {
 
     object(unsigned long long base_pointer, unsigned long long offset) : base_pointer(base_pointer), offset(offset) {}
 
-    object *parent = nullptr;
+    object* parent = nullptr;
 
-    void set_childs(std::vector<object *> objects) {
+    void set_childs(std::vector<object*> objects) {
       childs = objects;
-      for (object *child : childs)
+      for (object* child : childs)
         child->parent = this;
     }
 
@@ -19,9 +19,9 @@ namespace sdk {
 
     unsigned long long get_base() {
       if (base_pointer)
-        return *(unsigned long long *)(base_pointer);
+        return *(unsigned long long*)(base_pointer);
       if (parent->single_component_loaded())
-        return *(unsigned long long *)(parent->get_base() + offset);
+        return *(unsigned long long*)(parent->get_base() + offset);
       return 0;
     }
 
@@ -36,13 +36,13 @@ namespace sdk {
 
     virtual bool is_loaded() {
       bool loaded = single_component_loaded();
-      for (object *child : childs)
+      for (object* child : childs)
         loaded &= child->is_loaded();
       return loaded;
     }
 
   protected:
-    std::vector<object *> childs{};
+    std::vector<object*> childs{};
     unsigned long long base_pointer;
     unsigned long long offset;
   };

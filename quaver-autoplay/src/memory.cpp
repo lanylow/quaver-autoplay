@@ -1,12 +1,12 @@
 #include "include.hpp"
 
-static auto parse_pattern(const char *pattern) {
+auto parse_pattern(const char* pattern) {
   std::vector<int> b = {};
 
-  char *s = (char *)pattern;
-  char *e = (char *)pattern + strlen(pattern);
+  char* s = (char*)pattern;
+  char* e = (char*)pattern + strlen(pattern);
 
-  for (char *c = s; c < e; ++c) {
+  for (char* c = s; c < e; ++c) {
     if (*c == '?') {
       ++c;
       if (*c == '?')
@@ -21,7 +21,7 @@ static auto parse_pattern(const char *pattern) {
   return b;
 }
 
-static auto get_next_region(unsigned long long &address) {
+auto get_next_region(unsigned long long& address) {
   std::pair<unsigned long long, unsigned long long> b;
   MEMORY_BASIC_INFORMATION m = {};
   unsigned long long a = 0;
@@ -30,7 +30,7 @@ static auto get_next_region(unsigned long long &address) {
     a = address;
 
   do {
-    VirtualQuery((void *)(a), &m, sizeof(m));
+    VirtualQuery((void*)(a), &m, sizeof(m));
     b = std::make_pair((unsigned long long)(m.BaseAddress), m.RegionSize);
     a = b.first + b.second;
   } while (m.State != MEM_COMMIT || m.Protect != PAGE_EXECUTE_READWRITE);
@@ -38,11 +38,11 @@ static auto get_next_region(unsigned long long &address) {
   return b;
 }
 
-unsigned long long memory::pattern_scan(const char *pattern) {
+unsigned long long memory::pattern_scan(const char* pattern) {
   auto p = parse_pattern(pattern);
   unsigned long long s = 0;
   unsigned long long e = 0;
-  unsigned char *r;
+  unsigned char* r;
   bool f = true;
 
   do {
@@ -50,7 +50,7 @@ unsigned long long memory::pattern_scan(const char *pattern) {
 
     s = ri.first;
     e = ri.first + ri.second;
-    r = (unsigned char *)s;
+    r = (unsigned char*)s;
 
     for (auto i = 0; i < ri.second; i++) {
       f = true;

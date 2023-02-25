@@ -1,11 +1,11 @@
 #pragma once
 
 namespace autoplayer {
-  void run(sdk::quaver_game &quaver_game, replay &rep);
-  int get_nearest_frame(replay &rep, double time);
+  void run(sdk::quaver_game& quaver_game, replay& rep);
+  int get_nearest_frame(replay& rep, double time);
   int get_key_by_lane_index(int key_count, int lane_index);
   void simulate_key(int key_code, int type);
-  replay generate_auto_replay(sdk::qua &map);
+  replay generate_auto_replay(sdk::qua& map);
 
   static short key_config[11] = {
       0x41, // key_mania_4k1
