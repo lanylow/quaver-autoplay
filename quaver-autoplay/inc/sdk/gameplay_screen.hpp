@@ -27,13 +27,13 @@ namespace sdk {
       */
 
       sdk::qua map;
-      map.game_mode = *(int*)(address + 0xA4);
+      map.game_mode = *(int*)(address + 0xAC);
       map.title = sdk::string(address + 0x20).str();
       map.artist = sdk::string(address + 0x28).str();
       map.creator = sdk::string(address + 0x40).str();
       map.difficulty = sdk::string(address + 0x48).str();
 
-      sdk::list hit_object_list(address + 0x88);
+      sdk::list hit_object_list(address + 0x90);
 
       for (int i = 0; i < hit_object_list.size(); i++) {
         map.hit_object_data.push_back({

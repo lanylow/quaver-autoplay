@@ -4,7 +4,7 @@ void autoplayer_thread() {
   AllocConsole();
   freopen_s((FILE**)(stdout), "CONOUT$", "w", stdout);
 
-  auto quaver_game_pointer = *(unsigned long long*)(memory::pattern_scan("48 B9 ?? ?? ?? ?? ?? ?? ?? ?? 33 C0 48 89 01 48 B9 ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 89 45 F8") + 2);
+  auto quaver_game_pointer = *(unsigned long long*)(memory::pattern_scan("48 89 4D 10 48 BA ? ? ? ? ? ? ? ? 48 83 3A 00 74 41") + 6);
   sdk::quaver_game quaver_game(quaver_game_pointer);
 
   while (true) {
