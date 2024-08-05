@@ -3,7 +3,7 @@
 namespace sdk {
   class quaver_game : public sdk::object {
   public:
-    quaver_game(unsigned long long base_pointer) : sdk::object(base_pointer, 0) { 
+    explicit quaver_game(uintptr_t base_pointer) : sdk::object(base_pointer, 0) {
       set_children({
         gameplay_screen = new sdk::gameplay_screen(0x128) 
       }); 

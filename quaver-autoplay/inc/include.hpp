@@ -24,3 +24,5 @@
 #include "autoplayer/autoplayer.hpp"
 
 #include "memory.hpp"
+
+using namespace std::chrono_literals;

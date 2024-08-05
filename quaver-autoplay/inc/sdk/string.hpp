@@ -3,18 +3,18 @@
 namespace sdk {
   class string {
   public:
-    string(unsigned long long pointer) {
-      auto address = *(unsigned long long*)(pointer);
+    explicit string(uintptr_t pointer) {
+      auto address = *(uintptr_t*)(pointer);
       len = *(int*)(address + 0x8);
       buf = (const wchar_t*)(address + 0xC);
     }
 
-    int size() { 
+    size_t size() const {
       return len; 
     }
 
     std::wstring wstr() { 
-      return std::wstring(buf, len); 
+      return { buf, len };
     }
 
     std::string str() { 
@@ -22,7 +22,7 @@ namespace sdk {
     }
 
   private:
-    int len;
+    size_t len;
     const wchar_t* buf;
   };
 } // namespace sdk

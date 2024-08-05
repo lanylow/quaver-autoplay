@@ -1,14 +1,16 @@
 #pragma once
 
+#include <utility>
+
 namespace sdk {
   class object {
   public:
-    object(unsigned long long offset) : base_pointer(0), offset(offset) { }
+    explicit object(ptrdiff_t offset) : base_pointer(0), offset(offset) { }
 
-    object(unsigned long long base_pointer, unsigned long long offset) : base_pointer(base_pointer), offset(offset) { }
+    object(uintptr_t base_pointer, ptrdiff_t offset) : base_pointer(base_pointer), offset(offset) { }
 
     void set_children(std::vector<sdk::object*> objects) {
-      children = objects;
+      children = std::move(objects);
       for (auto& child : children)
         child->parent = this;
     }
@@ -17,15 +19,15 @@ namespace sdk {
       return children; 
     }
 
-    unsigned long long get_base() {
+    uintptr_t get_base() const { // NOLINT(*-no-recursion)
       if (base_pointer)
-        return *(unsigned long long*)(base_pointer);
+        return *(uintptr_t*)(base_pointer);
       if (parent->single_component_loaded())
-        return *(unsigned long long*)(parent->get_base() + offset);
+        return *(uintptr_t*)(parent->get_base() + offset);
       return 0;
     }
 
-    bool single_component_loaded() {
+    bool single_component_loaded() const { // NOLINT(*-no-recursion)
       auto valid = true;
       if (parent)
         valid &= parent->single_component_loaded();
@@ -34,7 +36,7 @@ namespace sdk {
       return valid;
     }
 
-    virtual bool is_loaded() {
+    virtual bool is_loaded() { // NOLINT(*-no-recursion)
       auto loaded = single_component_loaded();
       for (auto& child : children)
         loaded &= child->is_loaded();
@@ -45,7 +47,7 @@ namespace sdk {
 
   protected:
     std::vector<sdk::object*> children{ };
-    unsigned long long base_pointer;
-    unsigned long long offset;
+    uintptr_t base_pointer;
+    ptrdiff_t offset;
   };
 } // namespace sdk

@@ -1,5 +1,5 @@
 #pragma once
 
 namespace memory {
-  unsigned long long pattern_scan(const char* pattern);
+  uintptr_t pattern_scan(const char* pattern, size_t len);
 }

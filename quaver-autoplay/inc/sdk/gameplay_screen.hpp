@@ -3,13 +3,13 @@
 namespace sdk {
   class gameplay_screen : public sdk::object {
   public:
-    gameplay_screen(unsigned long long offset) : sdk::object(offset) { 
+    explicit gameplay_screen(ptrdiff_t offset) : sdk::object(offset) {
       set_children({ 
         gameplay_audio_timing = new sdk::gameplay_audio_timing(0x48) 
       }); 
     }
 
-    virtual bool is_loaded() override {
+    bool is_loaded() override {
       auto loaded = single_component_loaded();
       for (auto& child : children)
         loaded &= child->is_loaded();

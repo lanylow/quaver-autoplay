@@ -2,7 +2,7 @@
 
 namespace sdk {
   struct hit_object_data_t {
-    bool is_long_note() { 
+    bool is_long_note() const {
       return end_time > 0; 
     }
 

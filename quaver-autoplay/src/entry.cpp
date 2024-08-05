@@ -1,25 +1,22 @@
 #include <include.hpp>
 
-void autoplayer_thread() {
+[[noreturn]] void autoplayer_thread() {
   AllocConsole();
-  freopen_s((FILE**)(stdout), "CONOUT$", "w", stdout);
+  freopen_s((FILE**)(stdout), "conout$", "w", stdout);
 
-  auto quaver_game_pointer = *(unsigned long long*)(memory::pattern_scan("48 89 4D 10 48 BA ? ? ? ? ? ? ? ? 48 83 3A 00 74 41") + 6);
-  sdk::quaver_game quaver_game(quaver_game_pointer);
+  auto ptr = *(uintptr_t*)(memory::pattern_scan("\x48\x89\x4D\x10\x48\xBA\x00\x00\x00\x00\x00\x00\x00\x00\x48\x83\x3A\x00\x74\x41", 20) + 6);
+  sdk::quaver_game quaver_game(ptr);
 
   while (true) {
-    if (quaver_game.gameplay_screen->is_loaded()) {
-      auto map = quaver_game.gameplay_screen->current_map();
-      std::printf("Playing %s - %s [%s] by %s\n", map.artist.c_str(), map.title.c_str(), map.difficulty.c_str(), map.creator.c_str());
+    while (!quaver_game.gameplay_screen->is_loaded())
+      std::this_thread::sleep_for(100ms);
 
-      auto rep = autoplayer::generate_auto_replay(map);
-      while (quaver_game.gameplay_screen->is_loaded())
-        autoplayer::run(quaver_game, rep);
-    }
-    else {
-      while (!quaver_game.gameplay_screen->is_loaded())
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
+    auto map = quaver_game.gameplay_screen->current_map();
+    std::printf("Playing %s - %s [%s] by %s\n", map.artist.c_str(), map.title.c_str(), map.difficulty.c_str(), map.creator.c_str());
+
+    auto rep = autoplayer::generate_auto_replay(map);
+    while (quaver_game.gameplay_screen->is_loaded())
+      autoplayer::run(quaver_game, rep);
   }
 }
 

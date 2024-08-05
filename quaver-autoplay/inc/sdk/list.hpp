@@ -3,23 +3,23 @@
 namespace sdk {
   class list {
   public:
-    list(unsigned long long pointer) { 
-      address = *(unsigned long long*)(pointer); 
+    explicit list(uintptr_t pointer) {
+      address = *(uintptr_t*)(pointer);
     }
 
     int size() { 
       return *(int*)(get_array() + 0x8); 
     }
 
-    unsigned long long operator[](int i) { 
-      return *(unsigned long long*)(get_array() + 0x10 + 0x8 * (unsigned long long)(i)); 
+    uintptr_t operator[](int i) {
+      return *(uintptr_t*)(get_array() + 0x10 + 0x8 * i);
     }
 
   private:
-    unsigned long long get_array() { 
-      return *(unsigned long long*)(address + 0x8); 
+    uintptr_t get_array() const {
+      return *(uintptr_t*)(address + 0x8);
     }
 
-    unsigned long long address = 0;
+    uintptr_t address = 0;
   };
 } // namespace sdk
