@@ -17,33 +17,9 @@ namespace sdk {
       return loaded;
     }
 
-    auto current_map() {
-      auto address = *(unsigned long long*)(get_base() + 0x58);
-
-      /*
-      unsigned long long slider_velocities = *(unsigned long long *)(address + 0x80);
-      *(unsigned long long *)(slider_velocities + 0x10) = 0;
-      *(float *)(address + 0xA8) = 32.f;
-      */
-
-      sdk::qua map;
-      map.game_mode = *(int*)(address + 0xAC);
-      map.title = sdk::string(address + 0x20).str();
-      map.artist = sdk::string(address + 0x28).str();
-      map.creator = sdk::string(address + 0x40).str();
-      map.difficulty = sdk::string(address + 0x48).str();
-
-      sdk::list hit_object_list(address + 0x90);
-
-      for (int i = 0; i < hit_object_list.size(); i++) {
-        map.hit_object_data.push_back({
-          *(int*)(hit_object_list[i] + 0x10),
-          *(int*)(hit_object_list[i] + 0x18),
-          *(int*)(hit_object_list[i] + 0x14),
-        });
-      }
-
-      return map;
+    sdk::qua current_map() {
+      auto address = *(uintptr_t*)(get_base() + 0x58);
+      return sdk::qua(address);
     }
 
     sdk::gameplay_audio_timing* gameplay_audio_timing;

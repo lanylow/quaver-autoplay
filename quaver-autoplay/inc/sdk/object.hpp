@@ -15,7 +15,7 @@ namespace sdk {
         child->parent = this;
     }
 
-    auto get_children() { 
+    std::vector<sdk::object*> get_children() {
       return children; 
     }
 
