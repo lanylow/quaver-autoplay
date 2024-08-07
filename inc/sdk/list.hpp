@@ -13,7 +13,7 @@ namespace sdk {
     }
 
     item_type operator[](int i) {
-      return *(item_type*)(get_array() + 0x10 + 0x8 * i);
+      return *(item_type*)(get_array() + 0x10 + sizeof(item_type) * i);
     }
 
   private:

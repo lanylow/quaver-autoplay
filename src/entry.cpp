@@ -14,7 +14,7 @@
     auto map = quaver_game.gameplay_screen->current_map();
     std::printf("Playing %s - %s [%s] by %s\n", map.artist.c_str(), map.title.c_str(), map.difficulty.c_str(), map.creator.c_str());
 
-    auto rep = autoplayer::generate_auto_replay(map);
+    auto rep = autoplayer::generate_frames(map);
     while (quaver_game.gameplay_screen->is_loaded())
       autoplayer::run(quaver_game, rep);
   }

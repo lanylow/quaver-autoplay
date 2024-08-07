@@ -1,14 +1,30 @@
 #pragma once
 
 namespace autoplayer {
-  void run(sdk::quaver_game& quaver_game, autoplayer::replay& rep);
-  int get_nearest_frame(autoplayer::replay& rep, double time);
+  struct frame_type {
+    enum { press, release };
+  };
+
+  struct frame_t {
+    int time;
+    int lane;
+    int type;
+
+    frame_t(int time, int lane, int type) : time(time), lane(lane), type(type) { }
+
+    bool operator<(const autoplayer::frame_t& other) const {
+      return time < other.time;
+    }
+  };
+
+  void run(sdk::quaver_game& quaver_game, std::vector<autoplayer::frame_t>& frames);
+  std::vector<autoplayer::frame_t> generate_frames(sdk::qua& map);
+
   int get_key_by_lane_index(int key_count, int lane_index);
   void simulate_key(int key_code, int type);
-  autoplayer::replay generate_auto_replay(sdk::qua& map);
 
   // You have to change these keycodes based on your settings in game
-  static short key_config[11] = {
+  static int key_config[11] = {
       0x41, // key_mania_4k1 (A)
       0x53, // key_mania_4k2 (S)
       0x4B, // key_mania_4k3 (K)
