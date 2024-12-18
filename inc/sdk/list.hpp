@@ -9,7 +9,7 @@ namespace sdk {
     }
 
     int size() { 
-      return *(int*)(get_array() + 0x8); 
+      return *(int*)(address + 0x10);
     }
 
     item_type operator[](int i) {

@@ -4,13 +4,13 @@ namespace sdk {
   class qua {
   public:
     explicit qua(uintptr_t pointer) {
-      game_mode = *(int*)(pointer + 0xAC);
+      game_mode = *(int*)(pointer + 0xBC);
       title = sdk::string(pointer + 0x20).str();
       artist = sdk::string(pointer + 0x28).str();
       creator = sdk::string(pointer + 0x40).str();
       difficulty = sdk::string(pointer + 0x48).str();
 
-      sdk::list<sdk::qua::hit_object_info_t*> hit_object_list(pointer + 0x90);
+      sdk::list<sdk::qua::hit_object_info_t*> hit_object_list(pointer + 0x88);
 
       for (int i = 0; i < hit_object_list.size(); i++) {
         auto obj = hit_object_list[i];
@@ -27,7 +27,7 @@ namespace sdk {
 
   private:
     struct hit_object_info_t {
-      uint8_t pad_00[0x10];
+      uint8_t pad_00[0x18];
       int start_time;
       int key_lane;
       int end_time;
